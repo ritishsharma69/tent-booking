@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Typography, Grid, Paper, TextField } from "@mui/material";
 import { useTentContext } from "../store/Store";
+import { useNavigate } from "react-router-dom";
 
 const formatDateToDDMMYYYY = (dateString: string): string => {
   const date = new Date(dateString);
@@ -13,21 +14,16 @@ const formatDateToDDMMYYYY = (dateString: string): string => {
 
 const BookingDetails: React.FC = () => {
   const { tentBookingSummary } = useTentContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!tentBookingSummary) {
+      navigate("/");
+    }
+  }, [tentBookingSummary, navigate]);
 
   if (!tentBookingSummary) {
-    return (
-      <Typography
-        variant="body1"
-        sx={{
-          color: "#a81f10",
-          fontSize: "1.25rem",
-          textAlign: "center",
-          marginTop: "16px",
-        }}
-      >
-        No booking details available Go BACK
-      </Typography>
-    );
+    return null;
   }
 
   const {

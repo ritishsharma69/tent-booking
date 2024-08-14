@@ -6,7 +6,7 @@ export const yatraApplicationNumberValidation = Yup.string().min(
 );
 export const nameValidation = Yup.string()
   .min(3, "Name must be at least 3 characters long")
-  .max(20, "Name cannot be longer than 30 characters")
+  .max(30, "Name cannot be longer than 30 characters")
   .matches(/^[A-Za-z\s]+$/, "Name must only contain letters and spaces")
   .required("Required");
 export const ageValidation = Yup.number()

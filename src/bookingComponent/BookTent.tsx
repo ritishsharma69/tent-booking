@@ -23,6 +23,7 @@ interface TentType {
   name: string;
   capacity: number;
   max_tents: number;
+  extra_person_price: number;
   default_rate: string;
 }
 
@@ -46,6 +47,7 @@ interface TentBookingSummary {
   max_person: number;
   total_fee: number;
   tents: TentItem[];
+  extra_person: any;
 }
 
 // formated date ok
@@ -78,6 +80,11 @@ const BookTent: React.FC = () => {
   const formattedCheckInDate = formatDateToDDMMYYYY(checkInDate);
   const formattedCheckOutDate = formatDateToDDMMYYYY(checkOutDate);
 
+  const [numAdditionalPersons, setNumAdditionalPersons] = useState<{
+    [key: string]: number;
+  }>({ keyName: 0 });
+  const extraPerson = numAdditionalPersons["Quad House"];
+
   useEffect(() => {
     if (checkInDate && checkOutDate && showCards) {
       fetchTentAvailability(checkInDate, checkOutDate);
@@ -95,7 +102,7 @@ const BookTent: React.FC = () => {
   const fetchTentAvailability = async (checkIn: string, checkOut: string) => {
     try {
       const response = await fetch(
-        `${baseUrl}/tent/check-availability?check_in_date=${checkIn}&check_out_date=${checkOut}`
+        `https://manimahesh.netgen.work/api/tent/check-availability?check_in_date=${checkIn}&check_out_date=${checkOut}`
       );
 
       if (!response.ok) {
@@ -132,6 +139,14 @@ const BookTent: React.FC = () => {
         ...prev,
         [id]: newCount,
       }));
+
+      // Reset additional persons count if the tent count is decreased
+      if (delta < 0) {
+        setNumAdditionalPersons((prev) => ({
+          ...prev,
+          [id]: 0,
+        }));
+      }
     }
   };
 
@@ -143,8 +158,21 @@ const BookTent: React.FC = () => {
     return diffDays || 0;
   };
 
-  const calculateTotalPrice = (payableAmount: string, count: number) => {
+  const calculateTotalPrice = (
+    tentName: string,
+    payableAmount: string,
+    count: number,
+    extraPersonPrice: number
+  ) => {
     const pricePerTent = parseFloat(payableAmount);
+    if (numAdditionalPersons[tentName] > 0) {
+      return (
+        pricePerTent * count +
+        numAdditionalPersons[tentName] *
+          extraPersonPrice *
+          calculateNumberOfNights()
+      );
+    }
     return pricePerTent * count;
   };
 
@@ -152,7 +180,13 @@ const BookTent: React.FC = () => {
     const totalFee = tentAvailability.reduce((total, accommodation) => {
       const tentCount = numTents[accommodation.tent_type.name] || 0;
       return (
-        total + calculateTotalPrice(accommodation.payable_amount, tentCount)
+        total +
+        calculateTotalPrice(
+          accommodation.tent_type.name,
+          accommodation.payable_amount,
+          tentCount,
+          accommodation.tent_type.extra_person_price
+        )
       );
     }, 0);
     console.log("Total Fee: ", totalFee);
@@ -161,17 +195,23 @@ const BookTent: React.FC = () => {
     const quadHouse = numTents[tentAvailability[0]?.tent_type.name] || 0;
     const hexaHouse = numTents[tentAvailability[1]?.tent_type.name] || 0;
 
-    const maxPerson = Object.values(numTents).reduce((sum, count, index) => {
-      // Adjust the calculation to match your data structure
-      return sum + count * (tentAvailability[index]?.tent_type?.capacity || 0);
-    }, 0);
-
     const tents: TentItem[] = tentAvailability
       .filter((accommodation) => numTents[accommodation.tent_type.name] > 0)
       .map((accommodation) => ({
         tent_type_id: accommodation.tent_type.id,
         quantity: numTents[accommodation.tent_type.name],
       }));
+
+    const maxPerson = Object.values(numTents).reduce((sum, count, index) => {
+      // Adjust the calculation to match your data structure
+      return (
+        sum +
+        count * (tentAvailability[index]?.tent_type?.capacity || 0) +
+        extraPerson -
+        quadHouse -
+        hexaHouse
+      );
+    }, 0);
 
     const summary: TentBookingSummary = {
       check_in_date: checkInDate,
@@ -181,6 +221,7 @@ const BookTent: React.FC = () => {
       max_person: maxPerson,
       total_fee: totalFee,
       tents: tents,
+      extra_person: extraPerson,
     };
     console.log(summary);
     setTentBookingSummary(summary);
@@ -202,8 +243,10 @@ const BookTent: React.FC = () => {
         pricePerTent: parseFloat(accommodation.payable_amount),
         nights: calculateNumberOfNights(),
         totalPrice: calculateTotalPrice(
+          accommodation.tent_type.name,
           accommodation.payable_amount,
-          tentCount
+          tentCount,
+          accommodation.tent_type.extra_person_price
         ),
         tentCount,
       };
@@ -217,7 +260,28 @@ const BookTent: React.FC = () => {
 
   // Create a new Date object representing the current date and time
   const today = new Date().toISOString().split("T")[0];
-  const yatraOpenDate = "2024-08-22";
+  const yatraOpenDate = "2024-08-26";
+
+  const handlePersonCountChange = (id: string, delta: number) => {
+    const accommodation = tentAvailability.find(
+      (item) => item.tent_type.name === id
+    );
+    if (!accommodation) return;
+
+    // Calculate the new count
+    const newCount = (numAdditionalPersons[id] || 0) + delta;
+
+    // Ensure the new count doesn't exceed the allowed range
+    if (
+      newCount >= 0 &&
+      newCount <= (numTents[id] || 0) * accommodation.tent_type.capacity
+    ) {
+      setNumAdditionalPersons((prev) => ({
+        ...prev,
+        [id]: newCount,
+      }));
+    }
+  };
 
   var minDate = today < yatraOpenDate ? yatraOpenDate : today;
 
@@ -256,7 +320,7 @@ const BookTent: React.FC = () => {
             width: "100%",
             height: "100vh",
             objectFit: "cover",
-            // filter: "blur(1.5px)",
+            filter: "blur(3px)",
             zIndex: -1,
           }}
         />
@@ -297,7 +361,7 @@ const BookTent: React.FC = () => {
             maxWidth: "400px",
             margin: "15px auto",
             marginTop: "40px",
-            marginBottom: 50
+            marginBottom: 50,
           }}
         >
           <Typography
@@ -329,6 +393,7 @@ const BookTent: React.FC = () => {
               value={checkInDate}
               onChange={(e) => {
                 setCheckInDate(e.target.value);
+                setCheckOutDate(""); // Reset the checkout date
                 setShowCards(false);
               }}
               InputLabelProps={{ shrink: true }}
@@ -456,22 +521,25 @@ const BookTent: React.FC = () => {
                       </Typography>
                     </Container>
 
-                    <Grid container spacing={2}>
+                    <Grid container spacing={0}>
                       <Grid item xs={12} sm={6} style={{ textAlign: "left" }}>
                         <Typography
                           variant="body1"
                           style={{ marginBottom: "8px" }}
                         >
                           <strong>Capacity:</strong> Max{" "}
-                          {accommodation.tent_type.capacity} Persons
+                          {accommodation.tent_type.capacity - 1} Persons
                         </Typography>
+
                         <Typography
                           variant="body1"
                           style={{ marginBottom: "8px" }}
                         >
                           <strong>Check-in Date:</strong> {formattedCheckInDate}
                         </Typography>
+                      </Grid>
 
+                      <Grid item xs={12} sm={6} style={{ textAlign: "right" }}>
                         <Typography variant="body1">
                           <strong>Availability:</strong>
                           <Typography
@@ -481,14 +549,7 @@ const BookTent: React.FC = () => {
                             {accommodation.min_availability}
                           </Typography>
                         </Typography>
-                      </Grid>
-                      <Grid item xs={12} sm={6} style={{ textAlign: "right" }}>
-                        <Typography
-                          variant="body1"
-                          style={{ color: "green", marginBottom: "8px" }}
-                        >
-                          <strong>Includes:</strong> Sleeping Bags
-                        </Typography>
+
                         <Typography
                           variant="body1"
                           style={{ marginBottom: "8px" }}
@@ -496,6 +557,37 @@ const BookTent: React.FC = () => {
                           <strong>Check-out Date:</strong>{" "}
                           {formattedCheckOutDate}
                         </Typography>
+                      </Grid>
+
+                      <Grid item xs={12} style={{ textAlign: "left" }}>
+                        <Typography
+                          variant="body1"
+                          style={{ color: "green", marginBottom: "8px" }}
+                        >
+                          <strong>Includes:</strong>{" "}
+                          {accommodation.tent_type.capacity - 1} Sleeping Bags &{" "}
+                          {accommodation.tent_type.capacity - 1} Carry Mats.{" "}
+                          <br />
+                        </Typography>
+                        <Typography
+                          style={{ color: "red", marginBottom: "8px", fontWeight: "bold" }}
+                        >
+                          <i>
+                            1 Additional Person with 1 Sleeping Bag and 1 Carry Mat
+                            available at extra charges of ₹ 250.
+                          </i>
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          style={{ color: "black", marginBottom: "8px" }}
+                        >
+                          <strong>Description:</strong> hii this is quad tent
+                          booking description here. here is the description for
+                          this and please read it carefully.
+                        </Typography>
+                      </Grid>
+
+                      <Grid item xs={12} sm={6} style={{ textAlign: "left" }}>
                         <Typography
                           variant="body1"
                           style={{ marginBottom: "8px" }}
@@ -503,6 +595,9 @@ const BookTent: React.FC = () => {
                           <strong>No. of Nights:</strong>{" "}
                           {calculateNumberOfNights()}
                         </Typography>
+                      </Grid>
+
+                      <Grid item xs={12} sm={6} style={{ textAlign: "right" }}>
                         <Typography variant="body1">
                           <strong>Payable Amount / Tent:</strong> ₹
                           {accommodation.payable_amount}
@@ -510,19 +605,99 @@ const BookTent: React.FC = () => {
                       </Grid>
                     </Grid>
                   </CardContent>
+
                   <Box
                     marginTop={2}
                     display="flex"
-                    flexDirection="column"
+                    justifyContent="space-between"
                     alignItems="center"
                   >
-                    <Typography
-                      variant="subtitle1"
-                      style={{ marginBottom: "8px" }}
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
                     >
-                      Number of Tents Needed
-                    </Typography>
-                    {accommodation.min_availability > 0 ? (
+                      <Typography
+                        variant="subtitle1"
+                        style={{ marginBottom: "8px" }}
+                      >
+                        No. of Tents Needed
+                      </Typography>
+                      {accommodation.min_availability > 0 ? (
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          style={{ marginBottom: "16px" }}
+                        >
+                          <IconButton
+                            onClick={() =>
+                              handleTentCountChange(
+                                accommodation.tent_type.name,
+                                -1
+                              )
+                            }
+                            disabled={
+                              (numTents[accommodation.tent_type.name] || 0) <= 0
+                            }
+                            style={{
+                              borderRadius: "50%",
+                              backgroundColor: "#e0e0e0",
+                              margin: "0 8px",
+                            }}
+                          >
+                            <RemoveIcon />
+                          </IconButton>
+                          <Typography
+                            variant="body1"
+                            style={{
+                              margin: "0 16px",
+                              fontWeight: "bold",
+                              fontSize: "1.2rem",
+                            }}
+                          >
+                            {numTents[accommodation.tent_type.name] || 0}
+                          </Typography>
+                          <IconButton
+                            onClick={() =>
+                              handleTentCountChange(
+                                accommodation.tent_type.name,
+                                1
+                              )
+                            }
+                            disabled={
+                              (numTents[accommodation.tent_type.name] || 0) >=
+                              accommodation.tent_type.max_tents
+                            }
+                            style={{
+                              borderRadius: "50%",
+                              backgroundColor: "#e0e0e0",
+                              margin: "0 8px",
+                            }}
+                          >
+                            <AddIcon />
+                          </IconButton>
+                        </Box>
+                      ) : (
+                        <Typography
+                          variant="body1"
+                          style={{ color: "red", fontWeight: "bold" }}
+                        >
+                          Not Available
+                        </Typography>
+                      )}
+                    </Box>
+
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                    >
+                      <Typography
+                        variant="subtitle1"
+                        style={{ marginBottom: "8px" }}
+                      >
+                        Additional Persons
+                      </Typography>
                       <Box
                         display="flex"
                         alignItems="center"
@@ -530,13 +705,16 @@ const BookTent: React.FC = () => {
                       >
                         <IconButton
                           onClick={() =>
-                            handleTentCountChange(
+                            handlePersonCountChange(
                               accommodation.tent_type.name,
                               -1
                             )
                           }
                           disabled={
-                            (numTents[accommodation.tent_type.name] || 0) <= 0
+                            (numAdditionalPersons[
+                              accommodation.tent_type.name
+                            ] || 0) <= 0 ||
+                            (numTents[accommodation.tent_type.name] || 0) === 0
                           }
                           style={{
                             borderRadius: "50%",
@@ -554,18 +732,22 @@ const BookTent: React.FC = () => {
                             fontSize: "1.2rem",
                           }}
                         >
-                          {numTents[accommodation.tent_type.name] || 0}
+                          {numAdditionalPersons[accommodation.tent_type.name] ||
+                            0}
                         </Typography>
                         <IconButton
                           onClick={() =>
-                            handleTentCountChange(
+                            handlePersonCountChange(
                               accommodation.tent_type.name,
                               1
                             )
                           }
                           disabled={
-                            (numTents[accommodation.tent_type.name] || 0) >=
-                            accommodation.tent_type.max_tents
+                            (numAdditionalPersons[
+                              accommodation.tent_type.name
+                            ] || 0) >=
+                              (numTents[accommodation.tent_type.name] || 0) ||
+                            (numTents[accommodation.tent_type.name] || 0) === 0
                           }
                           style={{
                             borderRadius: "50%",
@@ -576,14 +758,7 @@ const BookTent: React.FC = () => {
                           <AddIcon />
                         </IconButton>
                       </Box>
-                    ) : (
-                      <Typography
-                        variant="body1"
-                        style={{ color: "red", fontWeight: "bold" }}
-                      >
-                        Not Available
-                      </Typography>
-                    )}
+                    </Box>
                   </Box>
                 </Card>
               </Grid>
@@ -636,7 +811,7 @@ const BookTent: React.FC = () => {
                             {bookingSummary[0].name}
                           </Typography>
                           <Typography variant="body1">
-                            <strong>Number of Tents:</strong>{" "}
+                            <strong>No. of Tents:</strong>{" "}
                             {bookingSummary[0].tentCount}
                           </Typography>
                           <Typography variant="body1">
@@ -660,7 +835,7 @@ const BookTent: React.FC = () => {
                               {bookingSummary[1].name}
                             </Typography>
                             <Typography variant="body1">
-                              <strong>Number of Tents:</strong>{" "}
+                              <strong>No. of Tents:</strong>{" "}
                               {bookingSummary[1].tentCount}
                             </Typography>
                             <Typography variant="body1">
@@ -706,7 +881,7 @@ const BookTent: React.FC = () => {
                       },
                     }}
                   >
-                    Confirm Booking
+                    Proceed to Book
                   </Button>
                 </Box>
               </CardContent>

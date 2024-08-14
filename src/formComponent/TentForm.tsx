@@ -242,7 +242,8 @@ const TentForm: React.FC = () => {
                   fullWidth
                   id="yatra_application_number"
                   name="yatra_application_number"
-                  label="Yatra Application Number"
+                  // label="Yatra Application Number"
+                  label="Registration No."
                   value={formik.values.yatra_application_number}
                   onChange={(e) => {
                     formik.setFieldValue(

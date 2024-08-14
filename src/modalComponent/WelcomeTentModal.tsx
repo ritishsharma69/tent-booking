@@ -23,6 +23,10 @@ const WelcomeTentModal: React.FC<WelcomeTentModalProps> = ({ onClose }) => {
         boxShadow: 3,
       }}
     >
+      <div id="particles-js">
+
+        
+</div>
       <Box
         sx={{
           display: "flex",
@@ -32,12 +36,14 @@ const WelcomeTentModal: React.FC<WelcomeTentModalProps> = ({ onClose }) => {
           height: "70vh",
           textAlign: "center",
           backgroundImage: `url(${chambaKailash2Blur})`,
+          backgroundColor: "rgba(0,0,0,0.4)",
+          backgroundBlendMode: "multiply",
           backgroundSize: "cover",
           backgroundPosition: "center",
           color: "white",
           padding: 4,
           borderRadius: "12px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          boxShadow: " 0 4px 8px rgba(0, 0, 0, 0.2)",
           border: "1px solid rgba(255, 255, 255, 0.3)",
           WebkitBackdropFilter: "blur(10px)",
         }}
@@ -81,7 +87,7 @@ const WelcomeTentModal: React.FC<WelcomeTentModalProps> = ({ onClose }) => {
             textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
           }}
         >
-          22nd August to 11th September
+          26nd August to 11th September
         </Typography>
         <Button
           variant="contained"
