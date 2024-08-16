@@ -17,6 +17,7 @@ import manimahesh_Tent_Image from "../assets/manimahesh_Tent_Image.jpg";
 import { useTentContext } from "../store/Store";
 import WelcomeTentModal from "../modalComponent/WelcomeTentModal";
 import { useNavigate } from "react-router-dom";
+import {conf} from "../conf/conf";
 
 interface TentType {
   id: number;
@@ -74,7 +75,8 @@ const BookTent: React.FC = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const navigate = useNavigate();
-  const { setTentBookingSummary, baseUrl } = useTentContext();
+  const { setTentBookingSummary } = useTentContext();
+  const {baseUrl} = conf;
 
   // formatted Date ok
   const formattedCheckInDate = formatDateToDDMMYYYY(checkInDate);
@@ -83,7 +85,7 @@ const BookTent: React.FC = () => {
   const [numAdditionalPersons, setNumAdditionalPersons] = useState<{
     [key: string]: number;
   }>({ keyName: 0 });
-  const extraPerson = numAdditionalPersons["Quad House"];
+  const extraPerson = numAdditionalPersons["Quad House"] || 0;
 
   useEffect(() => {
     if (checkInDate && checkOutDate && showCards) {
@@ -102,7 +104,7 @@ const BookTent: React.FC = () => {
   const fetchTentAvailability = async (checkIn: string, checkOut: string) => {
     try {
       const response = await fetch(
-        `https://manimahesh.netgen.work/api/tent/check-availability?check_in_date=${checkIn}&check_out_date=${checkOut}`
+        `${baseUrl}/tent/check-availability?check_in_date=${checkIn}&check_out_date=${checkOut}`
       );
 
       if (!response.ok) {
@@ -375,7 +377,7 @@ const BookTent: React.FC = () => {
               fontSize: "1.5rem",
             }}
           >
-            Check from here
+            Check Availability
           </Typography>
           <Grid
             item
@@ -428,8 +430,8 @@ const BookTent: React.FC = () => {
                 min: minCheckOutDate,
                 max: "2024-09-11",
               }}
-              disabled={!checkInDate} // Disable if check-in date is not selected
-              style={{ marginBottom: "16px" }} // Optional: Add margin for spacing
+              disabled={!checkInDate}
+              style={{ marginBottom: "16px" }}
             />
           </Grid>
 
@@ -468,7 +470,7 @@ const BookTent: React.FC = () => {
               <Grid
                 item
                 xs={12}
-                sm={6}
+                // sm={6}
                 md={6}
                 display={"flex"}
                 justifyContent={"center"}
@@ -500,11 +502,11 @@ const BookTent: React.FC = () => {
                     <Container
                       sx={{
                         backgroundColor: "#e56051",
-                        height: "60px", // Adjust the height as needed
+                        height: "60px",
                         display: "flex",
-                        alignItems: "center", // Vertically center the text
-                        justifyContent: "center", // Horizontally center the text
-                        borderRadius: "8px", // Optional: Add border radius for rounded corners
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: "8px",
                         marginBottom: 5,
                       }}
                     >
@@ -541,7 +543,7 @@ const BookTent: React.FC = () => {
 
                       <Grid item xs={12} sm={6} style={{ textAlign: "right" }}>
                         <Typography variant="body1">
-                          <strong>Availability:</strong>
+                          <strong>Availability: </strong>
                           <Typography
                             component="span"
                             style={{ color: "red", fontWeight: "bold" }}
@@ -570,11 +572,15 @@ const BookTent: React.FC = () => {
                           <br />
                         </Typography>
                         <Typography
-                          style={{ color: "red", marginBottom: "8px", fontWeight: "bold" }}
+                          style={{
+                            color: "red",
+                            marginBottom: "8px",
+                            fontWeight: "bold",
+                          }}
                         >
                           <i>
-                            1 Additional Person with 1 Sleeping Bag and 1 Carry Mat
-                            available at extra charges of ₹ 250.
+                            1 Additional Person with 1 Sleeping Bag and 1 Carry
+                            Mat available at extra charges of ₹ 250.
                           </i>
                         </Typography>
                         <Typography
@@ -609,18 +615,17 @@ const BookTent: React.FC = () => {
                   <Box
                     marginTop={2}
                     display="flex"
-                    justifyContent="space-between"
+                    justifyContent="space-around"
                     alignItems="center"
+                    marginX="auto"
                   >
                     <Box
                       display="flex"
                       flexDirection="column"
                       alignItems="center"
+                      gap={2}
                     >
-                      <Typography
-                        variant="subtitle1"
-                        style={{ marginBottom: "8px" }}
-                      >
+                      <Typography variant="subtitle1">
                         No. of Tents Needed
                       </Typography>
                       {accommodation.min_availability > 0 ? (
@@ -778,18 +783,18 @@ const BookTent: React.FC = () => {
                 <Container
                   sx={{
                     backgroundColor: "#e56051",
-                    height: "70px", // Adjust the height as needed
+                    height: "70px",
                     display: "flex",
-                    alignItems: "center", // Vertically center the text
-                    justifyContent: "center", // Horizontally center the text
-                    borderRadius: "8px", // Optional: Add border radius for rounded corners
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "8px",
                     marginBottom: 5,
                   }}
                 >
                   <Typography
                     variant="h5"
                     gutterBottom
-                    sx={{ marginBottom: 0, fontSize: "2rem", color: "#fff" }} // White text color for contrast
+                    sx={{ marginBottom: 0, fontSize: "1.8rem", color: "#fff" }} // White text color for contrast
                   >
                     Booking Summary
                   </Typography>

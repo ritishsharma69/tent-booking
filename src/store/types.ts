@@ -37,7 +37,7 @@ export interface TentContextProps {
       React.SetStateAction<OtpResponseData | null>
     >;
     total_people: number;
-    baseUrl: string;
+    // baseUrl: string;
     // total_fee: number;
     tentBookingSummary: BookingSummary | null;
     setTentBookingSummary: React.Dispatch<React.SetStateAction<BookingSummary | null>>;

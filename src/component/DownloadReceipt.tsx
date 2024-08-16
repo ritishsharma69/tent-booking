@@ -10,9 +10,10 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import axios from "axios";
-import { useTentContext } from "../store/Store";
-import { useNavigate } from "react-router-dom";
+// import { useTentContext } from "../store/Store";
+// import { useNavigate } from "react-router-dom";
 import tentImageReceipt from "../assets/tentImageReceipt.jpeg";
+import {conf} from "../conf/conf";
 
 const CenteredContainer = styled(Box)({
   display: "flex",
@@ -103,7 +104,8 @@ const DownloadReceipt: React.FC = () => {
   const [verificationSuccess, setVerificationSuccess] =
     useState<boolean>(false);
 
-  const { baseUrl } = useTentContext();
+  // const { baseUrl } = useTentContext();
+  const {baseUrl} = conf;
 
   const handleMobileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.replace(/\D/g, "");

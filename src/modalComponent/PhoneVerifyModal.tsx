@@ -4,6 +4,7 @@ import axios from "axios";
 import { useTentContext } from "../store/Store";
 import { useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
+import {conf} from "../conf/conf";
 
 interface PhoneNumberVerifyProps {
   mobile: string;
@@ -18,9 +19,10 @@ const PhoneNumberVerify: React.FC<PhoneNumberVerifyProps> = ({
   const [isResendDisabled, setIsResendDisabled] = useState<boolean>(true);
   const [verificationSuccess, setVerificationSuccess] =
     useState<boolean>(false);
-  const { bookingId, setOtpResponseData, baseUrl } = useTentContext();
+  const { bookingId, setOtpResponseData } = useTentContext();
   const navigate = useNavigate();
   const [message, setMessage] = useState<string>("");
+  const {baseUrl} = conf;
 
   useEffect(() => {
     if (timeLeft <= 0) {

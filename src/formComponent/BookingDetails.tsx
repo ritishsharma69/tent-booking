@@ -68,6 +68,15 @@ const BookingDetails: React.FC = () => {
                 InputProps={{ readOnly: true }}
                 variant="outlined"
                 margin="normal"
+                disabled
+                style={{background: "#ebebeb", }}
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: 'black',
+                    fontWeight: "700",
+                    fontSize: "18px"
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -78,6 +87,15 @@ const BookingDetails: React.FC = () => {
                 InputProps={{ readOnly: true }}
                 variant="outlined"
                 margin="normal"
+                disabled
+                style={{background: "#ebebeb", }}
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: 'black',
+                    fontWeight: "700",
+                    fontSize: "18px"
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -88,6 +106,15 @@ const BookingDetails: React.FC = () => {
                 InputProps={{ readOnly: true }}
                 variant="outlined"
                 margin="normal"
+                disabled
+                style={{background: "#ebebeb", }}
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: 'black',
+                    fontWeight: "700",
+                    fontSize: "18px"
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -98,6 +125,15 @@ const BookingDetails: React.FC = () => {
                 InputProps={{ readOnly: true }}
                 variant="outlined"
                 margin="normal"
+                disabled
+                style={{background: "#ebebeb", }}
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: 'black',
+                    fontWeight: "700",
+                    fontSize: "18px"
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -108,6 +144,15 @@ const BookingDetails: React.FC = () => {
                 InputProps={{ readOnly: true }}
                 variant="outlined"
                 margin="normal"
+                disabled
+                style={{background: "#ebebeb", }}
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: 'black',
+                    fontWeight: "700",
+                    fontSize: "18px"
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -118,6 +163,16 @@ const BookingDetails: React.FC = () => {
                 InputProps={{ readOnly: true }}
                 variant="outlined"
                 margin="normal"
+                focused= {false}
+                disabled
+                style={{background: "#ebebeb", }}
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: 'black',
+                    fontWeight: "700",
+                    fontSize: "18px"
+                  }
+                }}
               />
             </Grid>
           </Grid>

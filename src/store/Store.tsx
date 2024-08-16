@@ -19,7 +19,7 @@ const TentContext = createContext<TentContextProps | undefined>(undefined);
 export const TentProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const baseUrl = "https://manimahesh.netgen.work/api";
+  // const baseUrl = "https://manimahesh.netgen.work/api";
   const [apiData, setApiData] = useState<TentData[]>([]);
   const [tentBookingSummary, setTentBookingSummary] = useState<BookingSummary | null>(
     null
@@ -42,17 +42,6 @@ const [primaryTraveler, setPrimaryTraveler] = useState<PrimaryTraveler>({
     id_number: "",
     address: "",
     total_people: additionalTravelersCount + 1,
-
-    // check_in_date: bookingSummary?.check_in_date || "2024-08-20",
-    // check_out_date: bookingSummary?.check_out_date || "2024-08-21",
-    // quadHouse: bookingSummary?.quadHouse || 0,
-    // hexaHouse: bookingSummary?.hexaHouse || 0,
-    // total_fee: bookingSummary?.total_fee || 0,
-    // max_person: bookingSummary?.max_person || 0,
-    // tents: bookingSummary?.tents || [
-    //   { tent_type_id: 1, quantity: 2 },
-    //   { tent_type_id: 2, quantity: 2 },
-    // ],
   });
   
 
@@ -63,23 +52,7 @@ const [primaryTraveler, setPrimaryTraveler] = useState<PrimaryTraveler>({
     if (tentBookingSummary) {
       setPrimaryTraveler((prev) => ({
         ...prev,
-        // check_in_date: bookingSummary.check_in_date,
-        // check_out_date: bookingSummary.check_out_date,
-        // quadHouse: bookingSummary.quadHouse,
-        // hexaHouse: bookingSummary.hexaHouse,
-        // total_fee: bookingSummary.total_fee,
-        // max_person: bookingSummary.max_person,
         total_people: additionalTravelersCount + 1,
-        // tents: [
-        //   {
-        //     tent_type_id: 1,
-        //     quantity: 2,
-        //   },
-        //   {
-        //     tent_type_id: 2,
-        //     quantity: 2,
-        //   },
-        // ],
       }));
     }
   }, [tentBookingSummary, additionalTravelersCount]);
@@ -98,7 +71,7 @@ const [primaryTraveler, setPrimaryTraveler] = useState<PrimaryTraveler>({
         otpResponseData,
         setOtpResponseData,
         total_people: primaryTraveler.total_people,
-        baseUrl,
+        // baseUrl,
         tentBookingSummary,
         setTentBookingSummary,
         max_person: tentBookingSummary?.max_person ?? 0,

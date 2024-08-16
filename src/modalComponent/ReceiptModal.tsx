@@ -1,14 +1,16 @@
 import React from "react";
 import { Button, DialogActions, Box, Typography } from "@mui/material";
 import axios from "axios";
-import { useTentContext } from "../store/Store";
+// import { useTentContext } from "../store/Store";
+import {conf} from "../conf/conf";
 
 interface ReceiptModalProps {
   mobile: string;
 }
 
 const ReceiptModal: React.FC<ReceiptModalProps> = ({ mobile }) => {
-  const { baseUrl } = useTentContext();
+  // const { baseUrl } = useTentContext();
+  const {baseUrl} = conf;
 
   const handleDownloadReceipt = async () => {
 

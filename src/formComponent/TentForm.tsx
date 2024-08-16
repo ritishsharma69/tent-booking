@@ -34,6 +34,7 @@ import BookingDetails from "./BookingDetails";
 import TermsAndConditions from "../modalComponent/TermsAndConditions";
 import PhoneVerifyModel from "../modalComponent/PhoneVerifyModal";
 import ReceiptModal from "../modalComponent/ReceiptModal";
+import { conf } from "../conf/conf";
 
 const TentForm: React.FC = () => {
   const [receiptModal, setReceiptModal] = useState<boolean>(false);
@@ -41,6 +42,7 @@ const TentForm: React.FC = () => {
     useState<boolean>(false);
   const [phoneVerifyModal, setPhoneVerifyModal] = useState<boolean>(false);
   const [isXs, setIsXs] = useState(window.innerWidth <= 992);
+  const { baseUrl } = conf;
 
   useEffect(() => {
     const handleResize = () => {
@@ -55,7 +57,6 @@ const TentForm: React.FC = () => {
     setPrimaryTraveler,
     travelers,
     setTravelers,
-    baseUrl,
     additionalTravelersCount,
     setAdditionalTravelersCount,
     max_person,
@@ -213,7 +214,7 @@ const TentForm: React.FC = () => {
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit}>
             <Grid mb={2}>
-              <Typography
+              {/* <Typography
                 variant="h6"
                 sx={{
                   color: "#991a0c",
@@ -228,13 +229,34 @@ const TentForm: React.FC = () => {
                 }}
               >
                 Primary Traveler Details
+              </Typography> */}
+              <Typography
+                variant="h6"
+                sx={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                  background: "#a81f10",
+                  color: "#fff",
+                  marginBottom: "16px",
+                  marginTop: "20px",
+                  borderRadius: 2,
+                  padding: 1,
+                  fontSize: {
+                    xs: "1.3rem",
+                    sm: "1.55rem",
+                    md: "1.75rem",
+                  },
+                }}
+              >
+                Primary Traveler Details
               </Typography>
-              <Grid
+              {/* <Grid
                 container
                 mt={-2.5}
                 borderTop={3}
                 borderColor="#991a0c"
-              ></Grid>
+              ></Grid> */}
             </Grid>
             <Grid container spacing={2} mb={2}>
               <Grid item xs={12} md={6}>
@@ -244,6 +266,13 @@ const TentForm: React.FC = () => {
                   name="yatra_application_number"
                   // label="Yatra Application Number"
                   label="Registration No."
+                  sx={{
+                    "& .MuiInputLabel-root": {
+                      color: "black",
+                      fontWeight: "700",
+                      fontSize: "18px",
+                    },
+                  }}
                   value={formik.values.yatra_application_number}
                   onChange={(e) => {
                     formik.setFieldValue(
@@ -271,6 +300,13 @@ const TentForm: React.FC = () => {
                       Name <span style={{ color: "red" }}>*</span>
                     </span>
                   }
+                  sx={{
+                    "& .MuiInputLabel-root": {
+                      color: "black",
+                      fontWeight: "700",
+                      fontSize: "18px",
+                    },
+                  }}
                   value={formik.values.name}
                   onChange={formik.handleChange}
                   error={formik.touched.name && Boolean(formik.errors.name)}
@@ -287,6 +323,13 @@ const TentForm: React.FC = () => {
                       Age <span style={{ color: "red" }}>*</span>
                     </span>
                   }
+                  sx={{
+                    "& .MuiInputLabel-root": {
+                      color: "black",
+                      fontWeight: "700",
+                      fontSize: "18px",
+                    },
+                  }}
                   type="text"
                   value={formik.values.age}
                   onChange={(e) => {
@@ -301,7 +344,11 @@ const TentForm: React.FC = () => {
                 <FormControl fullWidth>
                   <InputLabel>
                     {
-                      <span>
+                      <span style={{
+                          color: "black",
+                          fontWeight: "700",
+                          fontSize: "18px",
+                      }}>
                         Gender <span style={{ color: "red" }}>*</span>
                       </span>
                     }
@@ -309,7 +356,7 @@ const TentForm: React.FC = () => {
                   <Select
                     id="gender"
                     name="gender"
-                    label="Gender"
+                    label="Gender  "
                     value={formik.values.gender}
                     onChange={formik.handleChange}
                     error={
@@ -339,6 +386,13 @@ const TentForm: React.FC = () => {
                   id="email"
                   name="email"
                   label={<span>Email</span>}
+                  sx={{
+                    "& .MuiInputLabel-root": {
+                      color: "black",
+                      fontWeight: "700",
+                      fontSize: "18px",
+                    },
+                  }}
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   error={formik.touched.email && Boolean(formik.errors.email)}
@@ -351,6 +405,13 @@ const TentForm: React.FC = () => {
                   fullWidth
                   id="mobile"
                   name="mobile"
+                  sx={{
+                    "& .MuiInputLabel-root": {
+                      color: "black",
+                      fontWeight: "700",
+                      fontSize: "18px",
+                    },
+                  }}
                   label={
                     <span>
                       Phone Number <span style={{ color: "red" }}>*</span>
@@ -369,7 +430,11 @@ const TentForm: React.FC = () => {
                 <FormControl fullWidth>
                   <InputLabel>
                     {
-                      <span>
+                      <span style={{
+                        color: "black",
+                        fontWeight: "700",
+                        fontSize: "18px",
+                    }}>
                         ID Type <span style={{ color: "red" }}>*</span>
                       </span>
                     }
@@ -411,6 +476,13 @@ const TentForm: React.FC = () => {
                       ID Number <span style={{ color: "red" }}>*</span>
                     </span>
                   }
+                  sx={{
+                    "& .MuiInputLabel-root": {
+                      color: "black",
+                      fontWeight: "700",
+                      fontSize: "18px",
+                    },
+                  }}
                   placeholder={getIdNumberPlaceholder(formik.values.id_type)}
                   value={formik.values.id_number}
                   onChange={(e) => {
@@ -438,6 +510,13 @@ const TentForm: React.FC = () => {
                       Address <span style={{ color: "red" }}>*</span>
                     </span>
                   }
+                  sx={{
+                    "& .MuiInputLabel-root": {
+                      color: "black",
+                      fontWeight: "700",
+                      fontSize: "18px",
+                    },
+                  }}
                   value={formik.values.address}
                   onChange={formik.handleChange}
                   rows={2}
@@ -454,7 +533,13 @@ const TentForm: React.FC = () => {
                   <FormControl fullWidth>
                     <InputLabel>
                       {
-                        <span>
+                        <span
+                        style={{
+                          color: "black",
+                          fontWeight: "700",
+                          fontSize: "18px",
+                      }}
+                        >
                           Additional Travelers{" "}
                           <span style={{ color: "red" }}>*</span>
                         </span>
@@ -474,38 +559,6 @@ const TentForm: React.FC = () => {
                   </FormControl>
                 </Box>
               </Grid>
-
-              {/* <Grid item xs={12}>
-                <Box className="travelers-count" sx={{ mb: 2 }}>
-                  <FormControl fullWidth>
-                    <InputLabel htmlFor="additional-travelers">
-                      <span>
-                        Additional Travelers{" "}
-                        <span style={{ color: "red" }}>*</span>
-                      </span>
-                    </InputLabel>
-                    <TextField
-                      id="additional-travelers"
-                      type="number"
-                      value={additionalTravelersCount}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        const numberValue = Number(value);
-          
-                        if (!isNaN(numberValue) && numberValue >= 0 && numberValue <= max_person) {
-                          setAdditionalTravelersCount(numberValue);
-                        }
-                      }}
-                      inputProps={{
-                        min: 0,
-                        max: max_person - 1,
-                        step: 1,
-                      }}
-                      fullWidth
-                    />
-                  </FormControl>
-                </Box>
-              </Grid> */}
 
               {/* Additional Travelers Title */}
               {additionalTravelersCount > 0 && (
@@ -551,7 +604,7 @@ const TentForm: React.FC = () => {
                           gap: 10,
                         }}
                       >
-                        <h3 style={{ color: "#991a0c" }}>
+                        <h3 style={{ color: "#991a0c", fontSize: "20px", marginTop: "4px", marginBottom: "-5px" }}>
                           Traveler {index + 1}
                         </h3>
                         <TextField
@@ -561,6 +614,13 @@ const TentForm: React.FC = () => {
                               Name <span style={{ color: "red" }}>*</span>
                             </span>
                           }
+                          sx={{
+                            "& .MuiInputLabel-root": {
+                              color: "black",
+                              fontWeight: "700",
+                              fontSize: "18px",
+                            },
+                          }}
                           id={`additionalTravelers.${index}.name`}
                           name={`additionalTravelers.${index}.name`}
                           value={traveler.name}
@@ -581,6 +641,13 @@ const TentForm: React.FC = () => {
                               Age <span style={{ color: "red" }}>*</span>
                             </span>
                           }
+                          sx={{
+                            "& .MuiInputLabel-root": {
+                              color: "black",
+                              fontWeight: "700",
+                              fontSize: "18px",
+                            },
+                          }}
                           id={`additionalTravelers.${index}.age`}
                           name={`additionalTravelers.${index}.age`}
                           type="text"
@@ -609,7 +676,11 @@ const TentForm: React.FC = () => {
                             id={`additionalTravelers-${index}-gender-label`}
                           >
                             {
-                              <span>
+                              <span style={{
+                                color: "black",
+                                fontWeight: "700",
+                                fontSize: "18px",
+                            }}>
                                 Gender <span style={{ color: "red" }}>*</span>
                               </span>
                             }
@@ -721,6 +792,13 @@ const TentForm: React.FC = () => {
                                   <TextField
                                     fullWidth
                                     label="Name"
+                                    sx={{
+                                      "& .MuiInputLabel-root": {
+                                        color: "black",
+                                        fontWeight: "700",
+                                        fontSize: "18px",
+                                      },
+                                    }}
                                     id={`additionalTravelers.${index}.name`}
                                     name={`additionalTravelers.${index}.name`}
                                     value={traveler.name}
@@ -742,6 +820,13 @@ const TentForm: React.FC = () => {
                                   <TextField
                                     fullWidth
                                     label="Age"
+                                    sx={{
+                                      "& .MuiInputLabel-root": {
+                                        color: "black",
+                                        fontWeight: "700",
+                                        fontSize: "18px",
+                                      },
+                                    }}
                                     id={`additionalTravelers.${index}.age`}
                                     name={`additionalTravelers.${index}.age`}
                                     type="text"
@@ -769,6 +854,11 @@ const TentForm: React.FC = () => {
                                 <TableCell>
                                   <FormControl fullWidth>
                                     <InputLabel
+                                     style={{
+                                      color: "black",
+                                      fontWeight: "700",
+                                      fontSize: "18px",
+                                  }}
                                       id={`additionalTravelers-${index}-gender-label`}
                                     >
                                       Gender
@@ -895,7 +985,8 @@ const TentForm: React.FC = () => {
                         style={{
                           color: "red",
                           fontSize: "12px",
-                          marginLeft: "14px",
+                          marginLeft: "30px",
+                          marginTop : "-20px",
                         }}
                       >
                         {formik.errors.terms_and_conditions}

@@ -76,7 +76,7 @@ const WelcomeTentModal: React.FC<WelcomeTentModalProps> = ({ onClose }) => {
             textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
           }}
         >
-          Open Date
+          Registration Open From
         </Typography>
         <Typography
           variant="h6"
@@ -87,7 +87,7 @@ const WelcomeTentModal: React.FC<WelcomeTentModalProps> = ({ onClose }) => {
             textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
           }}
         >
-          26nd August to 11th September
+          26<sup>th</sup> August to 11<sup>th</sup> September
         </Typography>
         <Button
           variant="contained"
