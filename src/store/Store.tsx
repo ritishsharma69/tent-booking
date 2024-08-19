@@ -57,6 +57,13 @@ const [primaryTraveler, setPrimaryTraveler] = useState<PrimaryTraveler>({
     }
   }, [tentBookingSummary, additionalTravelersCount]);
 
+  // const max_person = tentBookingSummary?.max_person ?? 0;
+  // useEffect(() => {
+  //   if (max_person > 0) {
+  //     setAdditionalTravelersCount(max_person - 1);
+  //   }
+  // }, [max_person]);
+
   return (
     <TentContext.Provider
       value={{

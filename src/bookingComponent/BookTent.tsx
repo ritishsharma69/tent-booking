@@ -17,7 +17,8 @@ import manimahesh_Tent_Image from "../assets/manimahesh_Tent_Image.jpg";
 import { useTentContext } from "../store/Store";
 import WelcomeTentModal from "../modalComponent/WelcomeTentModal";
 import { useNavigate } from "react-router-dom";
-import {conf} from "../conf/conf";
+import { conf } from "../conf/conf";
+import "./DateInput.css";
 
 interface TentType {
   id: number;
@@ -76,7 +77,7 @@ const BookTent: React.FC = () => {
 
   const navigate = useNavigate();
   const { setTentBookingSummary } = useTentContext();
-  const {baseUrl} = conf;
+  const { baseUrl } = conf;
 
   // formatted Date ok
   const formattedCheckInDate = formatDateToDDMMYYYY(checkInDate);
@@ -380,6 +381,7 @@ const BookTent: React.FC = () => {
             Check Availability
           </Typography>
           <Grid
+            className="input-container"
             item
             xs={12}
             style={{
@@ -408,6 +410,7 @@ const BookTent: React.FC = () => {
           </Grid>
 
           <Grid
+            className="input-container"
             item
             xs={12}
             style={{
@@ -543,7 +546,7 @@ const BookTent: React.FC = () => {
 
                       <Grid item xs={12} sm={6} style={{ textAlign: "right" }}>
                         <Typography variant="body1">
-                          <strong>Availability: </strong>
+                          <strong>Total Tents Available: </strong>
                           <Typography
                             component="span"
                             style={{ color: "red", fontWeight: "bold" }}
