@@ -49,7 +49,7 @@ const NavBar: React.FC = () => {
           <Box sx={{ display: { xs: "none", lg: "flex" } }}>
             <Button
               component={Link}
-              to="/"
+              to="/book-tent"
               color="inherit"
               sx={{
                 marginLeft: 2,
@@ -107,7 +107,7 @@ const NavBar: React.FC = () => {
 
       <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
         <List>
-          <ListItem button component={Link} to="/" onClick={handleDrawerClose}>
+          <ListItem button component={Link} to="/book-tent" onClick={handleDrawerClose}>
             <ListItemText primary="Book Tent" />
           </ListItem>
           <ListItem

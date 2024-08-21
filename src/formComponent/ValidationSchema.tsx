@@ -38,9 +38,9 @@ export const phoneValidation = Yup.string()
       ].includes(value)
   )
   .required("Please enter your 10-digit mobile number.");
-export const dateOfBirthValidation = Yup.date()
-  .required("Date of Birth is required")
-  .max(new Date(), "Date of Birth cannot be in the future.");
+// export const dateOfBirthValidation = Yup.date()
+//   .required("Date of Birth is required")
+//   .max(new Date(), "Date of Birth cannot be in the future.");
 export const idTypeValidation = Yup.string()
   .oneOf(["Aadhar Card", "Driver License", "Pan Card"], "Invalid ID Type")
   .required("Required");
@@ -91,7 +91,7 @@ const customIdNumberValidation = Yup.string().test(
 );
 
 export const addressValidation = Yup.string()
-  .max(100, "Address cannot be longer than 100 characters")
+  .max(200, "Address cannot be longer than 200 characters")
   .required("Please enter your complete address, including the pin code.");
 export const termsAndConditionsValidation = Yup.boolean()
   .oneOf([true], "You must accept the Terms & Conditions")

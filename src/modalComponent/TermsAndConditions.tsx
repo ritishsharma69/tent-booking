@@ -73,12 +73,11 @@ const TermsAndConditions: React.FC<ServicesAndCancellationPageProps> = ({
             General Instructions for Travelers
           </SubHeading>
 
-
-
           <Typography variant="body1" paragraph>
-            • The customer is responsible for any damage or loss to the tent, sleeping bags, or other equipment during the rental period. Charges for repair or replacement will be applied if necessary.
+            • The customer is responsible for any damage or loss to the tent,
+            sleeping bags, or other equipment during the rental period. Charges
+            for repair or replacement will be applied if necessary.
           </Typography>
-
         </Box>
 
         <Box textAlign="center" mb={3}>
@@ -86,17 +85,15 @@ const TermsAndConditions: React.FC<ServicesAndCancellationPageProps> = ({
             Cancellation & Refund Policy
           </SubHeading>
           <Box textAlign="left" mb={3} mx="auto">
-
             <Typography variant="body1" paragraph>
-              • No Refunds: All payments, including deposits, are non-refundable under any circumstances. This policy applies to cancellations, changes, or no-shows.
+              • No Refunds: All payments, including deposits, are non-refundable
+              under any circumstances. This policy applies to cancellations,
+              changes, and no-shows.
             </Typography>
             <Typography variant="body1" paragraph>
-              • We do not provide refunds or compensation for adverse weather conditions. In case of severe weather warnings, we may offer rescheduling options.
-            </Typography>
-
-            <Typography variant="body1" paragraph>
-              • In case of cancellation
-              .
+              • We do not provide refunds or compensation for adverse weather
+              conditions. In case of severe weather warnings, we may offer
+              rescheduling options subjective to availability.
             </Typography>
           </Box>
         </Box>

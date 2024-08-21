@@ -10,6 +10,8 @@ import {
   Button,
   Container,
   Dialog,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -74,6 +76,8 @@ const BookTent: React.FC = () => {
   const [numTents, setNumTents] = useState<{ [key: string]: number }>({});
   const [showCards, setShowCards] = useState<boolean>(false);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [goingAlone, setGoingAlone] = useState<boolean>(false);
+  const [selectedTentType, setSelectedTentType] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const { setTentBookingSummary } = useTentContext();
@@ -205,16 +209,28 @@ const BookTent: React.FC = () => {
         quantity: numTents[accommodation.tent_type.name],
       }));
 
-    const maxPerson = Object.values(numTents).reduce((sum, count, index) => {
-      // Adjust the calculation to match your data structure
-      return (
-        sum +
-        count * (tentAvailability[index]?.tent_type?.capacity || 0) +
-        extraPerson -
-        quadHouse -
-        hexaHouse
-      );
-    }, 0);
+    // const maxPerson = Object.values(numTents).reduce((sum, count, index) => {
+    //   // Adjust the calculation to match your data structure
+    //   return (
+    //     sum +
+    //     count * (tentAvailability[index]?.tent_type?.capacity || 0) +
+    //     extraPerson -
+    //     quadHouse -
+    //     hexaHouse
+    //   );
+    // }, 0);
+
+    const maxPerson = goingAlone
+      ? 1
+      : Object.values(numTents).reduce((sum, count, index) => {
+          return (
+            sum +
+            count * (tentAvailability[index]?.tent_type?.capacity || 0) +
+            extraPerson -
+            quadHouse -
+            hexaHouse
+          );
+        }, 0);
 
     const summary: TentBookingSummary = {
       check_in_date: checkInDate,
@@ -228,7 +244,7 @@ const BookTent: React.FC = () => {
     };
     console.log(summary);
     setTentBookingSummary(summary);
-    navigate("./tent-form");
+    navigate("/tent-form");
   };
 
   const handleCancelBooking = () => {
@@ -266,6 +282,9 @@ const BookTent: React.FC = () => {
   const yatraOpenDate = "2024-08-26";
 
   const handlePersonCountChange = (id: string, delta: number) => {
+    // if (goingAlone) {
+    //   if (delta > 0) return; // Prevent increasing additional persons if going alone
+    // }
     const accommodation = tentAvailability.find(
       (item) => item.tent_type.name === id
     );
@@ -291,6 +310,28 @@ const BookTent: React.FC = () => {
   const handleCloseWelcomeModal = () => {
     setWelcomeTentModal(false);
   };
+
+  const handleGoingAloneChange =
+    (tentTypeName: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const isChecked = event.target.checked;
+      if (isChecked) {
+        setSelectedTentType(tentTypeName);
+        setGoingAlone(isChecked);
+      } else if (selectedTentType === tentTypeName) {
+        setSelectedTentType(null);
+        setGoingAlone(false);
+      }
+
+      setNumTents((prev) => ({
+        ...prev,
+        [tentTypeName]: isChecked ? 1 : 0,
+      }));
+
+      setNumAdditionalPersons((prev) => ({
+        ...prev,
+        [tentTypeName]: 0,
+      }));
+    };
 
   return (
     <Container>
@@ -393,6 +434,7 @@ const BookTent: React.FC = () => {
             <TextField
               fullWidth
               label="Check-in Date"
+              // placeholder="dd-mm-yyyy"
               type="date"
               value={checkInDate}
               onChange={(e) => {
@@ -422,6 +464,7 @@ const BookTent: React.FC = () => {
             <TextField
               fullWidth
               label="Check-out Date"
+              // placeholder="dd-mm-yyyy"
               type="date"
               value={checkOutDate}
               onChange={(e) => {
@@ -431,7 +474,7 @@ const BookTent: React.FC = () => {
               InputLabelProps={{ shrink: true }}
               inputProps={{
                 min: minCheckOutDate,
-                max: "2024-09-11",
+                max: "2024-09-14",
               }}
               disabled={!checkInDate}
               style={{ marginBottom: "16px" }}
@@ -590,9 +633,13 @@ const BookTent: React.FC = () => {
                           variant="body1"
                           style={{ color: "black", marginBottom: "8px" }}
                         >
-                          <strong>Description:</strong> hii this is quad tent
-                          booking description here. here is the description for
-                          this and please read it carefully.
+                          <strong>Description:</strong>{" "}
+                          <span>
+                            It is a {accommodation.tent_type.capacity - 1 + 2}
+                            -man tent, but{" "}
+                            {accommodation.tent_type.capacity - 1} people can sleep
+                            comfortably in it.
+                          </span>
                         </Typography>
                       </Grid>
 
@@ -614,6 +661,31 @@ const BookTent: React.FC = () => {
                       </Grid>
                     </Grid>
                   </CardContent>
+
+                  {/*  */}
+                  {accommodation.min_availability > 0 ? (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={
+                            selectedTentType === accommodation.tent_type.name
+                          }
+                          onChange={handleGoingAloneChange(
+                            accommodation.tent_type.name
+                          )}
+                          disabled={
+                            selectedTentType !== null &&
+                            selectedTentType !== accommodation.tent_type.name
+                          }
+                          color="primary"
+                        />
+                      }
+                      label="I’m going alone."
+                    />
+                  ) : (
+                    <p></p>
+                  )}
+                  {/*  */}
 
                   <Box
                     marginTop={2}
@@ -645,6 +717,7 @@ const BookTent: React.FC = () => {
                               )
                             }
                             disabled={
+                              goingAlone ||
                               (numTents[accommodation.tent_type.name] || 0) <= 0
                             }
                             style={{
@@ -673,8 +746,9 @@ const BookTent: React.FC = () => {
                               )
                             }
                             disabled={
+                              goingAlone ||
                               (numTents[accommodation.tent_type.name] || 0) >=
-                              accommodation.tent_type.max_tents
+                                accommodation.tent_type.max_tents
                             }
                             style={{
                               borderRadius: "50%",
@@ -719,6 +793,7 @@ const BookTent: React.FC = () => {
                             )
                           }
                           disabled={
+                            goingAlone ||
                             (numAdditionalPersons[
                               accommodation.tent_type.name
                             ] || 0) <= 0 ||
@@ -751,6 +826,7 @@ const BookTent: React.FC = () => {
                             )
                           }
                           disabled={
+                            goingAlone ||
                             (numAdditionalPersons[
                               accommodation.tent_type.name
                             ] || 0) >=

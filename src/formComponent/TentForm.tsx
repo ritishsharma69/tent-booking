@@ -214,22 +214,6 @@ const TentForm: React.FC = () => {
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit}>
             <Grid mb={2}>
-              {/* <Typography
-                variant="h6"
-                sx={{
-                  color: "#991a0c",
-                  marginBottom: "16px",
-                  marginTop: "20px",
-                  fontWeight: "bold",
-                  fontSize: {
-                    xs: "1.5rem",
-                    sm: "1.75rem",
-                    md: "2rem",
-                  },
-                }}
-              >
-                Primary Traveler Details
-              </Typography> */}
               <Typography
                 variant="h6"
                 sx={{
@@ -532,7 +516,7 @@ const TentForm: React.FC = () => {
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Box className="travelers-count" sx={{ mb: 2 }}>
                   <FormControl fullWidth>
                     <InputLabel>
@@ -562,9 +546,9 @@ const TentForm: React.FC = () => {
                     </Select>
                   </FormControl>
                 </Box>
-              </Grid>
+              </Grid> */}
 
-              {/* <Grid item xs={12}>
+              <Grid item xs={12}>
                 <Box className="travelers-count" sx={{ mb: 2 }}>
                   <FormControl fullWidth>
                     <InputLabel>
@@ -594,7 +578,7 @@ const TentForm: React.FC = () => {
                     </Select>
                   </FormControl>
                 </Box>
-              </Grid> */}
+              </Grid>
 
               {/* Additional Travelers Title */}
               {additionalTravelersCount > 0 && (
