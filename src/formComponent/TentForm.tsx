@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useFormik, FormikProvider, FormikErrors, ErrorMessage } from "formik";
+import { useFormik, FormikProvider, FormikErrors } from "formik";
 import {
   TextField,
   Button,
@@ -7,7 +7,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  IconButton,
   Grid,
   Box,
   Container,
@@ -21,12 +20,10 @@ import {
   Checkbox,
   FormControlLabel,
   SelectChangeEvent,
-  CardActions,
   Dialog,
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { primaryTravelerSchemas } from "./ValidationSchema";
 import { useTentContext } from "../store/Store";
 import { AdditionalTravelers } from "./types";
@@ -138,10 +135,6 @@ const TentForm: React.FC = () => {
       ),
     }));
   }, [additionalTravelersCount]);
-
-  // useEffect(() => {
-  //   console.log('Formik values:', formik.values);
-  // }, [formik.values]);
 
   useEffect(() => {
     setTravelers(formik.values.additionalTravelers);
@@ -516,38 +509,6 @@ const TentForm: React.FC = () => {
                 />
               </Grid>
 
-              {/* <Grid item xs={12}>
-                <Box className="travelers-count" sx={{ mb: 2 }}>
-                  <FormControl fullWidth>
-                    <InputLabel>
-                      {
-                        <span
-                          style={{
-                            color: "black",
-                            fontWeight: "700",
-                            fontSize: "18px",
-                          }}
-                        >
-                          Additional Travelers{" "}
-                          <span style={{ color: "red" }}>*</span>
-                        </span>
-                      }
-                    </InputLabel>
-                    <Select
-                      value={additionalTravelersCount}
-                      onChange={handleSelectChange}
-                      label="Additional Travelers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                    >
-                      {Array.from({ length: max_person }, (_, i) => (
-                        <MenuItem key={i} value={i}>
-                          {i}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-              </Grid> */}
-
               <Grid item xs={12}>
                 <Box className="travelers-count" sx={{ mb: 2 }}>
                   <FormControl fullWidth>
@@ -740,25 +701,6 @@ const TentForm: React.FC = () => {
                               </div>
                             )}
                         </FormControl>
-                        <Button
-                          variant="contained"
-                          onClick={() => {
-                            const updatedTravelers =
-                              formik.values.additionalTravelers.filter(
-                                (_, i) => i !== index
-                              );
-                            formik.setFieldValue(
-                              "additionalTravelers",
-                              updatedTravelers
-                            );
-                            setAdditionalTravelersCount(
-                              updatedTravelers.length
-                            );
-                          }}
-                          color="error"
-                        >
-                          DELETE <DeleteIcon />
-                        </Button>
                       </div>
                     ))
                   ) : (
@@ -768,7 +710,7 @@ const TentForm: React.FC = () => {
                         <TableHead style={{ background: "#E56051" }}>
                           <TableRow>
                             <TableCell
-                              sx={{ width: 50 }}
+                              sx={{ width: 10 }}
                               style={{ color: "white", fontWeight: "bold" }}
                             >
                               Sr. No.
@@ -802,13 +744,6 @@ const TentForm: React.FC = () => {
                                   Gender<span style={{ color: "red" }}>*</span>
                                 </span>
                               }
-                            </TableCell>
-
-                            <TableCell
-                              sx={{ width: 50 }}
-                              style={{ color: "white", fontWeight: "bold" }}
-                            >
-                              Actions
                             </TableCell>
                           </TableRow>
                         </TableHead>
@@ -918,26 +853,6 @@ const TentForm: React.FC = () => {
                                         </div>
                                       )}
                                   </FormControl>
-                                </TableCell>
-                                <TableCell>
-                                  <IconButton
-                                    onClick={() => {
-                                      const updatedTravelers =
-                                        formik.values.additionalTravelers.filter(
-                                          (_, i) => i !== index
-                                        );
-                                      formik.setFieldValue(
-                                        "additionals",
-                                        updatedTravelers
-                                      );
-                                      setAdditionalTravelersCount(
-                                        updatedTravelers.length
-                                      );
-                                    }}
-                                    color="error"
-                                  >
-                                    <DeleteIcon />
-                                  </IconButton>
                                 </TableCell>
                               </TableRow>
                             )
